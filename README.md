@@ -1,5 +1,7 @@
 # web_flash_tool
 
+[English](README.en.md) | 日本語
+
 Tailscale経由でアクセスし、ブラウザのWeb Serial API (`esptool-js`) を使って
 M5Stack (ESP32 / ESP32-S3) にファームウェアを書き込むためのWebツールです。
 
@@ -20,6 +22,61 @@ M5Stack (ESP32 / ESP32-S3) にファームウェアを書き込むためのWeb�
 npm install
 npm run build   # web/ を dist/ にビルド
 ```
+
+## ファームウェア生成側リポジトリの設定
+
+このWebツールの `↻` でビルド成果物を収集するには、`~/MyGit` 配下にある各PlatformIO
+リポジトリが、ビルド後のファームウェアをリポジトリ直下の
+`.pio_build_firmware/` に出力する必要があります。
+
+実装例として `~/MyGit/Stackchan_dance/scripts/copy_firmware.py` を使用します。
+対象リポジトリで次のように `scripts/copy_firmware.py` を配置してください。
+
+```sh
+cd ~/MyGit/<対象リポジトリ>
+mkdir -p scripts
+cp ../Stackchan_dance/scripts/copy_firmware.py scripts/copy_firmware.py
+```
+
+続いて、対象リポジトリの `platformio.ini` にPostスクリプトとして登録します。
+全環境で使用する場合は共通の `[env]` セクションへ追加します。
+
+```ini
+[env]
+extra_scripts =
+    post:scripts/copy_firmware.py
+```
+
+すでに `extra_scripts` が定義されている場合は、既存のスクリプトを残したまま
+次の行を同じリストへ追加してください。
+
+```ini
+    post:scripts/copy_firmware.py
+```
+
+`copy_firmware.py` は通常のPlatformIOビルド完了後に、アプリ、ファイルシステム、
+bootloaderやpartition tableなどの追加イメージをFlashサイズに合わせて1つのbinへ
+結合します。生成物は次の形式で `.pio_build_firmware/` にコピーされます。
+
+```text
+<リポジトリ名>-<環境名>-<Gitハッシュ>-<日時>-0x0-<Flash容量>bytes.bin
+```
+
+例えば `Stackchan_dance` の `m5stack-cores3` 環境では、次のような名前になります。
+
+```text
+Stackchan_dance-m5stack-cores3-579568e-20260723-194334-0x0-16777216bytes.bin
+```
+
+このファイル名に含まれる `0x0` とFlash容量は、Webツールの書き込み先アドレスと
+容量チェックに使用されます。その後、Web画面の `↻` を押すと
+`move_firmware.py` が各リポジトリの `.pio_build_firmware/` を検索し、生成されたbinを
+このWebツールの `firmware/` へ移動します。
+
+このスクリプトはESP32向けPlatformIO環境の `ESP32_APP_OFFSET`、`FS_START`、
+`ESP32_FS_IMAGE_NAME`、`FLASH_EXTRA_IMAGES` などを利用します。ファイルシステムを
+使用しないプロジェクトや、これらの変数・イメージ構成が異なるプロジェクトでは、
+その構成に合わせて `copy_firmware.py` を調整してください。
 
 ## 起動
 
