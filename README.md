@@ -9,9 +9,13 @@ M5Stack (ESP32 / ESP32-S3) にファームウェアを書き込むためのWeb�
 シリアル経由で書き込みます。書き込み処理はすべてブラウザ内で完結するため、
 サーバーはファームウェア一覧の提供と静的ファイルの配信のみを行います。
 
+## システム構成
+
+![Web Flashシステムの構成図](docs/images/web-flash-system-overview-v2.png)
+
 ファイル名の末尾に書き込みアドレスと容量を `-0x<アドレス>-<バイト数>bytes.bin`
 の形式で付加すると、そのアドレスへ書き込みます (例:
-`Stackchan_dance-m5stack-cores3-579568e-20260723-194334-0x10000-6553600bytes.bin`
+`ExampleProject-m5stack-cores3-579568e-20260723-194334-0x10000-6553600bytes.bin`
 → アドレス `0x10000` に書き込み、パーティション容量 `6553600` バイトを超える
 場合はエラーにします)。このサフィックスがないファイルはアドレス `0x0`
 への書き込みとして扱われます (パーティション容量チェックは行われません)。
@@ -29,13 +33,14 @@ npm run build   # web/ を dist/ にビルド
 リポジトリが、ビルド後のファームウェアをリポジトリ直下の
 `.pio_build_firmware/` に出力する必要があります。
 
-実装例として `~/MyGit/Stackchan_dance/scripts/copy_firmware.py` を使用します。
-対象リポジトリで次のように `scripts/copy_firmware.py` を配置してください。
+このリポジトリに同梱している
+[`copy_repository/scripts/copy_firmware.py`](copy_repository/scripts/copy_firmware.py)
+を使用します。Webツールのリポジトリで次のコマンドを実行し、対象リポジトリへ
+`scripts/copy_firmware.py` をコピーしてください。
 
 ```sh
-cd ~/MyGit/<対象リポジトリ>
-mkdir -p scripts
-cp ../Stackchan_dance/scripts/copy_firmware.py scripts/copy_firmware.py
+mkdir -p ~/MyGit/<対象リポジトリ>/scripts
+cp copy_repository/scripts/copy_firmware.py ~/MyGit/<対象リポジトリ>/scripts/
 ```
 
 続いて、対象リポジトリの `platformio.ini` にPostスクリプトとして登録します。
@@ -62,10 +67,10 @@ bootloaderやpartition tableなどの追加イメージをFlashサイズに合�
 <リポジトリ名>-<環境名>-<Gitハッシュ>-<日時>-0x0-<Flash容量>bytes.bin
 ```
 
-例えば `Stackchan_dance` の `m5stack-cores3` 環境では、次のような名前になります。
+例えば `ExampleProject` の `m5stack-cores3` 環境では、次のような名前になります。
 
 ```text
-Stackchan_dance-m5stack-cores3-579568e-20260723-194334-0x0-16777216bytes.bin
+ExampleProject-m5stack-cores3-579568e-20260723-194334-0x0-16777216bytes.bin
 ```
 
 このファイル名に含まれる `0x0` とFlash容量は、Webツールの書き込み先アドレスと

@@ -9,9 +9,13 @@ Select a `.bin` file from the `./firmware/` directory and flash it directly from
 the browser over a serial connection. The entire flashing process runs in the
 browser; the server only provides the firmware list and serves static files.
 
+## System Overview
+
+![Web Flash system architecture](docs/images/web-flash-system-overview-v2.png)
+
 To specify a flash address and maximum capacity, append
 `-0x<address>-<byte-count>bytes.bin` to the filename. For example,
-`Stackchan_dance-m5stack-cores3-579568e-20260723-194334-0x10000-6553600bytes.bin`
+`ExampleProject-m5stack-cores3-579568e-20260723-194334-0x10000-6553600bytes.bin`
 is written at address `0x10000`, and an error is raised if the file exceeds the
 partition capacity of `6553600` bytes. Files without this suffix are written at
 address `0x0` without a partition-capacity check.
@@ -29,13 +33,14 @@ For the refresh button (`↻`) in this web tool to collect build artifacts, each
 PlatformIO repository under `~/MyGit` must output its post-build firmware to a
 `.pio_build_firmware/` directory at the repository root.
 
-Use `~/MyGit/Stackchan_dance/scripts/copy_firmware.py` as the reference
-implementation. Place `scripts/copy_firmware.py` in each target repository:
+Use the bundled
+[`copy_repository/scripts/copy_firmware.py`](copy_repository/scripts/copy_firmware.py).
+From the web tool repository, run the following commands to copy it into the
+target repository as `scripts/copy_firmware.py`:
 
 ```sh
-cd ~/MyGit/<target-repository>
-mkdir -p scripts
-cp ../Stackchan_dance/scripts/copy_firmware.py scripts/copy_firmware.py
+mkdir -p ~/MyGit/<target-repository>/scripts
+cp copy_repository/scripts/copy_firmware.py ~/MyGit/<target-repository>/scripts/
 ```
 
 Then register it as a post script in the target repository's `platformio.ini`.
@@ -63,11 +68,11 @@ to `.pio_build_firmware/` using this filename format:
 <repository>-<environment>-<Git-hash>-<timestamp>-0x0-<flash-size>bytes.bin
 ```
 
-For example, the `m5stack-cores3` environment in `Stackchan_dance` produces a
+For example, the `m5stack-cores3` environment in `ExampleProject` produces a
 filename similar to:
 
 ```text
-Stackchan_dance-m5stack-cores3-579568e-20260723-194334-0x0-16777216bytes.bin
+ExampleProject-m5stack-cores3-579568e-20260723-194334-0x0-16777216bytes.bin
 ```
 
 The web tool uses the `0x0` address and flash capacity encoded in the filename
