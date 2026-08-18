@@ -1,1 +1,8 @@
 firmware/
+.secret/
+.claude/
+.DS_Store
+node_modules/
+dist/
+.env
+certs/

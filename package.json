@@ -1,0 +1,22 @@
+{
+  "name": "web_flash_tool",
+  "version": "1.0.0",
+  "description": "Web Serial based M5Stack firmware flasher, servable over Tailscale",
+  "license": "BSL-1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:api": "PORT=3001 node server/index.js",
+    "dev": "concurrently -k -n api,web \"npm:dev:api\" \"vite\"",
+    "build": "vite build",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "esptool-js": "^0.6.0",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "vite": "^8.1.5"
+  }
+}
