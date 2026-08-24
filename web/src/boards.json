@@ -3,5 +3,7 @@
   { "value": "m5stack-cores3", "label": "M5Stack CoreS3", "chip": "ESP32-S3", "flashSize": "16MB" },
   { "value": "atoms3", "label": "AtomS3", "chip": "ESP32-S3", "flashSize": "8MB" },
   { "value": "atoms3r", "label": "AtomS3R", "chip": "ESP32-S3", "flashSize": "8MB" },
-  { "value": "nesso_n1", "label": "M5Stack Nesso N1", "chip": "ESP32-C6", "flashSize": "16MB" }
+  { "value": "stamps3", "label": "Stamp-S3", "chip": "ESP32-S3", "flashSize": "8MB" },
+  { "value": "nesso_n1", "label": "M5Stack Nesso N1", "chip": "ESP32-C6", "flashSize": "16MB" },
+  { "value": "unit-c6l", "label": "M5Stack UnitC6L", "chip": "ESP32-C6", "flashSize": "4MB" }
 ]

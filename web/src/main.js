@@ -9,6 +9,8 @@ const els = {
   connectionStatus: document.getElementById("connection-status"),
   firmwareSelect: document.getElementById("firmware-select"),
   refreshFirmwareBtn: document.getElementById("refresh-firmware-btn"),
+  deleteFirmwareBtn: document.getElementById("delete-firmware-btn"),
+  deleteFirmwareDialog: document.getElementById("delete-firmware-dialog"),
   boardSelect: document.getElementById("board-select"),
   eraseFlashCheckbox: document.getElementById("erase-flash-checkbox"),
   flashBtn: document.getElementById("flash-btn"),
@@ -21,6 +23,7 @@ const els = {
   monitorStatus: document.getElementById("monitor-status"),
   deviceResetBtn: document.getElementById("device-reset-btn"),
   logClearBtn: document.getElementById("log-clear-btn"),
+  copyLogBtn: document.getElementById("copy-log-btn"),
   logOutput: document.getElementById("log-output"),
 };
 
@@ -92,11 +95,32 @@ function parseFirmwareName(name) {
 function log(message) {
   els.logOutput.textContent += `${message}\n`;
   els.logOutput.scrollTop = els.logOutput.scrollHeight;
+  updateCopyLogButtonState();
+}
+
+function updateCopyLogButtonState() {
+  els.copyLogBtn.disabled = els.logOutput.textContent.length === 0;
+}
+
+async function copyLog() {
+  const logText = els.logOutput.textContent;
+  if (!logText) return;
+
+  try {
+    await navigator.clipboard.writeText(logText);
+    els.copyLogBtn.textContent = "Copied!";
+    setTimeout(() => {
+      els.copyLogBtn.textContent = "Copy Log";
+    }, 1500);
+  } catch (err) {
+    log(`Log copy failed: ${err.message}`);
+  }
 }
 
 const terminal = {
   clean() {
     els.logOutput.textContent = "";
+    updateCopyLogButtonState();
   },
   writeLine(data) {
     log(data);
@@ -104,6 +128,7 @@ const terminal = {
   write(data) {
     els.logOutput.textContent += data;
     els.logOutput.scrollTop = els.logOutput.scrollHeight;
+    updateCopyLogButtonState();
   },
 };
 
@@ -157,6 +182,29 @@ function attachDisconnectListener(port) {
 
 function updateFlashButtonState() {
   els.flashBtn.disabled = !state.esploader || !els.firmwareSelect.value;
+  els.deleteFirmwareBtn.disabled = !els.firmwareSelect.value;
+}
+
+function confirmFirmwareDelete() {
+  if (!els.firmwareSelect.value) return;
+
+  els.deleteFirmwareDialog.returnValue = "";
+  els.deleteFirmwareDialog.showModal();
+}
+
+async function deleteAllFirmware() {
+  if (!els.firmwareSelect.value) return;
+
+  els.deleteFirmwareBtn.disabled = true;
+  try {
+    const res = await fetch("/api/firmware", { method: "DELETE" });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+    log(`Deleted all firmware (${body.deletedCount} files).`);
+  } catch (err) {
+    log(`Firmware delete failed: ${err.message}`);
+  }
+  await loadFirmwareList();
 }
 
 async function syncAndReloadFirmwareList() {
@@ -179,6 +227,7 @@ async function syncAndReloadFirmwareList() {
 
 async function loadFirmwareList() {
   els.firmwareSelect.innerHTML = '<option value="">読み込み中...</option>';
+  updateFlashButtonState();
   try {
     const res = await fetch("/api/firmware");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -203,6 +252,7 @@ async function loadFirmwareList() {
     updateFlashButtonState();
   } catch (err) {
     els.firmwareSelect.innerHTML = '<option value="">読み込み失敗</option>';
+    updateFlashButtonState();
     log(`Failed to load firmware list: ${err.message}`);
   }
 }
@@ -589,6 +639,12 @@ function checkSerialSupport() {
 els.connectBtn.addEventListener("click", connect);
 els.disconnectBtn.addEventListener("click", disconnect);
 els.refreshFirmwareBtn.addEventListener("click", syncAndReloadFirmwareList);
+els.deleteFirmwareBtn.addEventListener("click", confirmFirmwareDelete);
+els.deleteFirmwareDialog.addEventListener("close", () => {
+  if (els.deleteFirmwareDialog.returnValue === "confirm") {
+    void deleteAllFirmware();
+  }
+});
 els.firmwareSelect.addEventListener("change", updateFlashButtonState);
 els.flashBtn.addEventListener("click", flash);
 els.monitorBtn.addEventListener("click", startMonitor);
@@ -603,6 +659,7 @@ els.monitorAutoReconnectCheckbox.addEventListener("change", () => {
 });
 els.deviceResetBtn.addEventListener("click", resetDevice);
 els.logClearBtn.addEventListener("click", () => terminal.clean());
+els.copyLogBtn.addEventListener("click", copyLog);
 
 if ("serial" in navigator) {
   navigator.serial.addEventListener("connect", (event) => {

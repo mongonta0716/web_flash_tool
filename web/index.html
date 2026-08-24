@@ -42,6 +42,7 @@
           <button id="refresh-firmware-btn" type="button" title="Reload firmware list">
             ↻
           </button>
+          <button id="delete-firmware-btn" type="button" disabled>Delete All</button>
         </div>
         <div class="row">
           <label for="board-select">Board</label>
@@ -100,9 +101,23 @@
       </section>
 
       <section class="panel">
-        <h2>Log</h2>
+        <div class="panel-heading">
+          <h2>Log</h2>
+          <button id="copy-log-btn" type="button" disabled>Copy Log</button>
+        </div>
         <pre id="log-output"></pre>
       </section>
+
+      <dialog id="delete-firmware-dialog">
+        <form method="dialog">
+          <p>本当に削除してもいいですか？</p>
+          <p class="dialog-filename">firmware/ 内のすべてのファームウェア（.bin）が削除されます。</p>
+          <div class="dialog-actions">
+            <button type="submit" value="confirm" class="danger-button">はい</button>
+            <button type="submit" value="cancel" class="secondary-button">いいえ</button>
+          </div>
+        </form>
+      </dialog>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>

@@ -53,6 +53,17 @@ h1 {
   font-size: 1rem;
 }
 
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.panel-heading h2 {
+  margin-bottom: 0;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -92,6 +103,60 @@ button:disabled {
 
 #refresh-firmware-btn {
   background: #6b7280;
+}
+
+#copy-log-btn {
+  background: #6b7280;
+}
+
+#copy-log-btn:disabled {
+  background: #9ca3af;
+}
+
+#delete-firmware-btn,
+.danger-button {
+  background: #dc2626;
+}
+
+#delete-firmware-btn:disabled {
+  background: #9ca3af;
+}
+
+.secondary-button {
+  background: #6b7280;
+}
+
+dialog {
+  max-width: min(28rem, calc(100vw - 3rem));
+  padding: 1.25rem;
+  border: none;
+  border-radius: 10px;
+  color: inherit;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.dialog-filename {
+  overflow-wrap: anywhere;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  dialog {
+    background: #26282e;
+  }
 }
 
 .status {

@@ -141,8 +141,10 @@ npm start
    `python3 move_firmware.py ~/MyGit ./firmware` を実行してから一覧を再読み込み
    します (`~/MyGit` 配下の `.pio_build_firmware` フォルダにある新しいビルド成果物
    を `./firmware/` に取り込みます)。取り込み元は `FIRMWARE_SOURCE_DIR` 環境変数で
-   変更できます。`Board` では書き込み先の機種 (M5Stack Core2 / M5Stack CoreS3 /
-   AtomS3 / AtomS3R) を選び、機種ごとのFlashサイズを書き込み時に指定します。
+   変更できます。`Delete All` を押し、確認ダイアログで「はい」を選ぶと、
+   `./firmware/` 内のすべての `.bin` を削除します。`Board` では書き込み先の機種 (M5Stack Core2 / M5Stack CoreS3 /
+   AtomS3 / AtomS3R / Stamp-S3 / M5Stack Nesso N1 / M5Stack UnitC6L) を選び、機種ごとのFlashサイズを
+   書き込み時に指定します。
 3. **書き込み / Flash**: 必要なら `Erase flash before write` にチェックを入れ、
    `Flash` を押すと書き込みが始まります。完了後、デバイスは自動的にリセットされます。
 4. **シリアルモニター / Serial Monitor**: Baud rateを選んで `Monitor` を押します。
@@ -158,7 +160,9 @@ npm start
 | M5Stack CoreS3   | ESP32-S3 | 16MB       |
 | AtomS3           | ESP32-S3 | 8MB        |
 | AtomS3R          | ESP32-S3 | 8MB        |
+| Stamp-S3         | ESP32-S3 | 8MB        |
 | M5Stack Nesso N1 | ESP32-C6 | 16MB       |
+| M5Stack UnitC6L  | ESP32-C6 | 4MB        |
 
 このリストは [`web/src/boards.json`](web/src/boards.json) で管理しています。
 ボードを追加・変更する場合はこのファイルを編集し、`npm run build` (または

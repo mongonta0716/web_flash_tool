@@ -51,6 +51,28 @@ app.post("/api/firmware/sync", (req, res) => {
   );
 });
 
+app.delete("/api/firmware", (req, res) => {
+  fs.readdir(FIRMWARE_DIR, { withFileTypes: true }, async (err, entries) => {
+    if (err) {
+      if (err.code === "ENOENT") return res.json({ deletedCount: 0 });
+      return res.status(500).json({ error: "Failed to list firmware directory" });
+    }
+
+    const firmwareNames = entries
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".bin"))
+      .map((entry) => entry.name);
+
+    try {
+      await Promise.all(
+        firmwareNames.map((name) => fs.promises.unlink(path.join(FIRMWARE_DIR, name))),
+      );
+      res.json({ deletedCount: firmwareNames.length });
+    } catch {
+      res.status(500).json({ error: "Failed to delete all firmware" });
+    }
+  });
+});
+
 app.get("/firmware/:name", (req, res) => {
   const requestedName = path.basename(req.params.name);
 

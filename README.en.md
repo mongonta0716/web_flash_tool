@@ -148,8 +148,9 @@ certificate command again to renew an expired certificate.
    runs `python3 move_firmware.py ~/MyGit ./firmware` on the server and reloads
    the list. This collects new artifacts from `.pio_build_firmware/`
    directories under `~/MyGit`. Set `FIRMWARE_SOURCE_DIR` to use a different
-   source directory. Select the target device—M5Stack Core2, M5Stack CoreS3,
-   AtomS3, AtomS3R, or another configured board—from `Board`; its flash size is
+   source directory. Click `Delete All` and confirm with `はい` to delete every
+   `.bin` file in `./firmware/`. Select the target device—M5Stack Core2, M5Stack CoreS3,
+   AtomS3, AtomS3R, Stamp-S3, M5Stack Nesso N1, M5Stack UnitC6L, or another configured board—from `Board`; its flash size is
    passed to the flashing operation.
 3. **Flash**: Enable `Erase flash before write` when needed, then click `Flash`.
    The device resets automatically after a successful write.
@@ -166,7 +167,9 @@ certificate command again to renew an expired certificate.
 | M5Stack CoreS3   | ESP32-S3 | 16MB       |
 | AtomS3           | ESP32-S3 | 8MB        |
 | AtomS3R          | ESP32-S3 | 8MB        |
+| Stamp-S3         | ESP32-S3 | 8MB        |
 | M5Stack Nesso N1 | ESP32-C6 | 16MB       |
+| M5Stack UnitC6L  | ESP32-C6 | 4MB        |
 
 This list is maintained in [`web/src/boards.json`](web/src/boards.json). Edit
 that file and run `npm run build` (or `npm run dev`) to add or change a board.
