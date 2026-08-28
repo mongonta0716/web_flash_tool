@@ -142,7 +142,7 @@ npm start
    します (`~/MyGit` 配下の `.pio_build_firmware` フォルダにある新しいビルド成果物
    を `./firmware/` に取り込みます)。取り込み元は `FIRMWARE_SOURCE_DIR` 環境変数で
    変更できます。`Delete All` を押し、確認ダイアログで「はい」を選ぶと、
-   `./firmware/` 内のすべての `.bin` を削除します。`Board` では書き込み先の機種 (M5Stack Core2 / M5Stack CoreS3 /
+   `./firmware/` 内のすべての `.bin` を削除します。`Board` では書き込み先の機種 (M5Stack Basic 4MB / M5Stack Gray / M5Stack Fire / M5Stack Core2 / M5Stack CoreS3 /
    AtomS3 / AtomS3R / Stamp-S3 / M5Stack Nesso N1 / M5Stack UnitC6L) を選び、機種ごとのFlashサイズを
    書き込み時に指定します。
 3. **書き込み / Flash**: 必要なら `Erase flash before write` にチェックを入れ、
@@ -156,6 +156,9 @@ npm start
 
 | Board            | Chip     | Flash size |
 | ---------------- | -------- | ---------- |
+| M5Stack Basic 4MB | ESP32   | 4MB        |
+| M5Stack Gray     | ESP32    | 16MB       |
+| M5Stack Fire     | ESP32    | 16MB       |
 | M5Stack Core2    | ESP32    | 16MB       |
 | M5Stack CoreS3   | ESP32-S3 | 16MB       |
 | AtomS3           | ESP32-S3 | 8MB        |

@@ -1,4 +1,7 @@
 [
+  { "value": "m5stack-basic-4mb", "label": "M5Stack Basic 4MB", "chip": "ESP32", "flashSize": "4MB" },
+  { "value": "m5stack-gray", "label": "M5Stack Gray", "chip": "ESP32", "flashSize": "16MB" },
+  { "value": "m5stack-fire", "label": "M5Stack Fire", "chip": "ESP32", "flashSize": "16MB" },
   { "value": "m5stack-core2", "label": "M5Stack Core2", "chip": "ESP32", "flashSize": "16MB" },
   { "value": "m5stack-cores3", "label": "M5Stack CoreS3", "chip": "ESP32-S3", "flashSize": "16MB" },
   { "value": "atoms3", "label": "AtomS3", "chip": "ESP32-S3", "flashSize": "8MB" },
